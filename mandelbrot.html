@@ -1,0 +1,77 @@
+<html>
+<head>
+</head>
+<body>
+<canvas id="main" width="640" height="480">
+</canvas>
+
+<script>
+
+var c = document.getElementById("main");
+var ctx = c.getContext("2d");
+ctx.canvas.width = window.innerWidth;
+ctx.canvas.height = window.innerHeight;
+var midX = c.width / 2;
+var convX = midX / 2;
+var midY = c.height / 2;
+var convY = midY / 2;
+var cWidth = c.width;
+var cHeight = c.height;
+var cData = ctx.getImageData(0,0, cWidth, cHeight);
+
+function convertX(x) {
+  return (x - midX) / convX;
+}
+
+function convertY(y) {
+  return (y - midY) / convY;
+}
+
+function drawPixel (x, y, r, g, b, a) {
+    var index = (x + y * cWidth) * 4;
+
+    cData.data[index + 0] = r;
+    cData.data[index + 1] = g;
+    cData.data[index + 2] = b;
+    cData.data[index + 3] = a;
+}
+
+function updateCanvas() {
+    ctx.putImageData(cData, 0, 0);
+}
+
+function mandelbrot(xc,yc) {
+
+  var j;
+  var x = 0.0;
+  var y = 0.0;
+  for (j = 0; j < 50 && x*x + y*y <=4; ++j) {
+    var tmp = 2 * x * y;
+    x = x*x - y*y + xc;
+    y = tmp + yc;
+  }
+  // console.log("Returning " + j);
+  return j;
+}
+
+function drawPoint(x,y) {
+  var iters = mandelbrot(convertX(x),convertY(y));
+
+  if (iters < 50) {
+    drawPixel(x, y, (iters * 5), 0, 0, 255);
+  } else {
+    // do nothing, return false
+  }
+}
+
+var col;
+for (x=0; x < cHeight; x++) {
+  for (y=0; y < cWidth; y++) {
+    drawPoint(x,y);
+  }
+  updateCanvas();
+}
+updateCanvas();
+
+</script>
+<body>
