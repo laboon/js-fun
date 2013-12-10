@@ -1,0 +1,48 @@
+<html>
+<head></head>
+<body>
+
+<canvas id="main" width="700" height="600"></canvas>
+
+<script>
+var c = document.getElementById("main");
+var ctx = c.getContext("2d");
+var cities;
+
+function getDistance(lcity, rcity) {
+  return Math.sqrt(Math.pow((lcity.x - rcity.x), 2)
+    + Math.pow((lcity.y - rcity.y), 2));
+}
+
+function drawCity(x, y) {
+  ctx.beginPath();
+  ctx.arc(x, y, 10, 0, 2 * Math.PI);
+  ctx.fill();
+}
+
+function drawCities(cities) {
+  var j;
+  for (j =0; j < cities.length; j++) {
+    console.log("Drawing city: " + cities[j]);
+    //console.log("Drawing city at " + city.x + "," + city.y);
+    drawCity(cities[j].x, cities[j].y);
+  }
+}
+
+function generateMap(numCities) {
+  var x; var y; var j;
+  var cities = new Array();
+  for (j=0; j < numCities; j++) {
+    x = Math.round(c.width * Math.random());
+    y = Math.round(c.height * Math.random());
+    cities[j] = {x: x, y: y};
+  }
+  return cities;
+}
+
+cities = generateMap(5);
+drawCities(cities);
+console.log(getDistance(cities[0], cities[1]));
+</script>
+</body>
+</html>
